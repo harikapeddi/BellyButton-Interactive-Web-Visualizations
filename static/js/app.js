@@ -83,6 +83,62 @@ function buildChart(sample){
     
 }
 
-function 
 
-buildChart(950);
+// d3.selectAll("#sample-metadata").on('change', metaData)
+
+function buildmetaData(sample){
+    d3.json('data/samples.json').then(function(data){
+        // console.log(data);    
+
+    let metadata = data.metadata;
+    // console.log(metadata);
+    
+    let resultArray = metadata.filter(sampleObject => sampleObject.id == sample);
+    console.log(resultArray);
+
+    let result = resultArray[0];
+    // console.log(Object.keys(result));
+    // console.log(Object.values(result));
+
+    let panel = d3.select('#sample-metadata');
+
+    panel.html("");
+
+    // console.log(Object.entries(result));
+    Object.entries(result).forEach(([key, value]) => {
+        panel.append("h5").text(`${key.toUpperCase()}: ${value}`);
+    });
+
+
+
+
+
+    // metadata.forEach(sample => {
+
+        let dropDownMenu = d3.select('#selDataset')
+        let dataset = dropDownMenu.property('value')
+    //     console.log(dropDownMenu)
+
+    //     if dropDownMenu=sample_id
+
+
+    //     let sample_id = Object.values(sample)[0];
+    //     // console.log(sample_id);
+        
+    //     let sample_metadata = Object.values(sample);
+    //     // console.log(sample_metadata)
+        
+    // }
+    // );
+
+    
+    
+
+
+    });//this is the end of the data
+}
+
+
+buildChart(940);
+
+buildmetaData(950);
