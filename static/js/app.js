@@ -1,6 +1,8 @@
-// open the html from live server
+// to read the file samples.json open the html from live server
 
-// 
+
+//create a function to build both barchart and bubble chart based on the same sample
+
 function buildChart(sample){
     d3.json('data/samples.json').then(function(data){
         console.log(data);
@@ -23,7 +25,7 @@ function buildChart(sample){
         let sample_values = result.sample_values;
         console.log(sample_values);
 
-        // build a horizontal barchart
+        // build a horizontal barchart for top ten bacteria cultures
 
         let yTicks = otu_ids.slice(0, 10).map(ticks=> `OTU ${ticks}`).reverse()
 
@@ -36,17 +38,19 @@ function buildChart(sample){
         }];
 
         let barLayout = {
-            title : "Top Ten Bacteria Cultures for the Sample",
+            title : `Top Ten Bacteria Cultures for ${sample}`,
             margin : {
-                t: 30,
+                t: 40,
                 r: 0,
-                b: 20,
+                b: 50,
                 l: 150
             }
         };
         
-
         Plotly.newPlot("bar", barData, barLayout)
+
+
+        // build a horizontal barchart for top ten bacteria cultures
 
         let bubbleData = [{
             x : otu_ids,
@@ -61,12 +65,12 @@ function buildChart(sample){
         }];
 
         let bubbleLayout = {
-            title : "Bacteria Cultures for the Sample",
+            title : `Bacteria Cultures for ${sample}`,
             margin : {
                 t: 40,
                 r: 20,
                 b: 50,
-                l: 20
+                l: 30
             },
             hovermode : "closest",
             xaxis : {
@@ -77,68 +81,67 @@ function buildChart(sample){
         Plotly.newPlot("bubble", bubbleData, bubbleLayout)
 
 
+        // let wash_frequency = Object.values(data.metadata)
+
+
 
 
     }); //this is the end of the data
     
 }
 
+//create a function to add metadata to the "Demographic info" panel
 
-// d3.selectAll("#sample-metadata").on('change', metaData)
-
-function buildmetaData(sample){
+function addmetaData(sample){
     d3.json('data/samples.json').then(function(data){
-        // console.log(data);    
+        console.log(data);    
 
-    let metadata = data.metadata;
-    // console.log(metadata);
-    
-    let resultArray = metadata.filter(sampleObject => sampleObject.id == sample);
-    console.log(resultArray);
-
-    let result = resultArray[0];
-    // console.log(Object.keys(result));
-    // console.log(Object.values(result));
-
-    let panel = d3.select('#sample-metadata');
-
-    panel.html("");
-
-    // console.log(Object.entries(result));
-    Object.entries(result).forEach(([key, value]) => {
-        panel.append("h5").text(`${key.toUpperCase()}: ${value}`);
-    });
-
-
-
-
-
-    // metadata.forEach(sample => {
-
-        let dropDownMenu = d3.select('#selDataset')
-        let dataset = dropDownMenu.property('value')
-    //     console.log(dropDownMenu)
-
-    //     if dropDownMenu=sample_id
-
-
-    //     let sample_id = Object.values(sample)[0];
-    //     // console.log(sample_id);
+        let metadata = data.metadata;
+        // console.log(metadata);
         
-    //     let sample_metadata = Object.values(sample);
-    //     // console.log(sample_metadata)
-        
-    // }
-    // );
+        let resultArray = metadata.filter(sampleObject => sampleObject.id == sample);
+        console.log(resultArray);
 
-    
-    
+        let result = resultArray[0];
 
+        let panel = d3.select('#sample-metadata');
+
+        // clear the panel from previously selected sample
+
+        panel.html("");
+
+        Object.entries(result).forEach(([key, value]) => {
+            panel.append("h5").text(`${key.toUpperCase()}: ${value}`);
+        });
 
     });//this is the end of the data
 }
 
+// create a initiate function to initiate both buildchart and addmetadata function by using the dropdown Menu
 
-buildChart(940);
+function init(){
+    let dropDownMenu = d3.select('#selDataset');
+    d3.json('data/samples.json').then(function(data){
+        // console.log(data);
 
-buildmetaData(950);
+        sub_ID = data.names;
+        console.log(sub_ID);
+        sub_ID.forEach((sample) => {
+            dropDownMenu.append("option").property("value", sample).text(sample);
+        })
+    });
+
+    buildChart(940);
+
+    addmetaData(940);
+}
+
+// create event handler onchange defined in index.html by creating the function on "optionChanged"
+
+function optionChanged(sample){
+    addmetaData(sample);
+    buildChart(sample);
+}
+
+
+init()
