@@ -43,7 +43,7 @@ function buildChart(sample){
                 t: 40,
                 r: 0,
                 b: 50,
-                l: 150
+                l: 100
             }
         };
         
@@ -81,11 +81,6 @@ function buildChart(sample){
         Plotly.newPlot("bubble", bubbleData, bubbleLayout)
 
 
-        // let wash_frequency = Object.values(data.metadata)
-
-
-
-
     }); //this is the end of the data
     
 }
@@ -97,12 +92,14 @@ function addmetaData(sample){
         console.log(data);    
 
         let metadata = data.metadata;
-        // console.log(metadata);
+        console.log(metadata);
         
         let resultArray = metadata.filter(sampleObject => sampleObject.id == sample);
         console.log(resultArray);
 
         let result = resultArray[0];
+
+        // add data to the panel
 
         let panel = d3.select('#sample-metadata');
 
@@ -113,6 +110,29 @@ function addmetaData(sample){
         Object.entries(result).forEach(([key, value]) => {
             panel.append("h5").text(`${key.toUpperCase()}: ${value}`);
         });
+
+        // Bonus - create guage chart for wash frequency
+
+        let wash_frequency = result["wfreq"];
+
+        console.log(wash_frequency);
+
+        var g_data = [
+            {
+                domain: { x: [0, 1], y: [0, 1] },
+                value: wash_frequency,
+                title: { text: "Belly Button Washing Frequency <br> Scrubs per week" },
+                type: "indicator",
+                mode: "gauge+number",
+                gauge: { 
+                    axis: { range: [0, 9]} 
+                }
+            }
+        ];
+        
+        var g_layout = { width: 500, height: 500};
+
+        Plotly.newPlot("gauge", g_data, g_layout);
 
     });//this is the end of the data
 }
@@ -142,6 +162,5 @@ function optionChanged(sample){
     addmetaData(sample);
     buildChart(sample);
 }
-
 
 init()
