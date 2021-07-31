@@ -1,7 +1,10 @@
-
-Check the Interactive Webpage here - https://harikapeddi.github.io/BellyButton-Interactive-Web-Visualizations/
-
 # Plot.ly Homework - Belly Button Biodiversity
+
+#### Check the Interactive Webpage below
+
+#### https://harikapeddi.github.io/BellyButton-Interactive-Web-Visualizations/
+
+
 
 ![Bacteria by filterforge.com](Images/bacteria.jpg)
 
